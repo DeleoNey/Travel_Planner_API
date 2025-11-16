@@ -7,7 +7,7 @@ class TripPoint(models.Model):
     city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     date = models.DateField()
-    planned_budget = models.DecimalField(default=0)
+    planned_budget = models.DecimalField(max_digits=10, decimal_places=2)
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
