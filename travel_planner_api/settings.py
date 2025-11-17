@@ -10,6 +10,9 @@ env = environ.Env(DEBUG=(bool, False))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env('SECRET_KEY')
+WEATHER_API_KEY = env("WEATHER_API_KEY")
+CURRENCY_API_KEY = env("CURRENCY_API_KEY")
+PLACES_API_KEY = env("PLACES_API_KEY")
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost'])
 

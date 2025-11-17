@@ -14,4 +14,4 @@ class TripPoint(models.Model):
 
 
     def __str__(self):
-        return
+        return f'{self.trip} | {self.city} | {self.country}'
