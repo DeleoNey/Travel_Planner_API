@@ -1,4 +1,5 @@
 import http
+from datetime import date, datetime
 
 from rest_framework import viewsets, permissions, response
 from rest_framework.exceptions import NotFound
@@ -38,6 +39,7 @@ class TripPointViewSet(viewsets.ModelViewSet):
 class WeatherViewSet(viewsets.ModelViewSet):
     queryset = TripPoint.objects.all()
     serializer_class = TripPointSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerPermission]
 
     def retrieve(self, request, *args, **kwargs):
         trip_point = self.get_object()
@@ -48,15 +50,14 @@ class WeatherViewSet(viewsets.ModelViewSet):
         if trip_point.latitude and trip_point.longitude:
             weather_service = WeatherService()
 
-            current_temp = weather_service.get_weather(
+            weather_metrics = weather_service.get_weather(
                 lat=str(trip_point.latitude),
-                lon=str(trip_point.longitude)
+                lon=str(trip_point.longitude),
             )
 
-            data['weather'] = {
-                'current_temp': current_temp,
-            }
-            if not current_temp:
+            data['weather'] = weather_metrics
+
+            if 'error' in data['weather']:
                 return response.Response("Weather not found", status=HTTP_404_NOT_FOUND)
 
         return Response(data)
