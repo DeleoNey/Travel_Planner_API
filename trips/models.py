@@ -14,13 +14,3 @@ class Trip(models.Model):
 
     def __str__(self):
         return self.title
-
-    # POST / api / trips / {id} / points /
-    #
-    # GET / api / trips / {id} / points /
-    #
-    # GET / api / trip - points / {id} /
-    #
-    # PATCH / api / trip - points / {id} /
-    #
-    # DELETE / api / trip - points / {id} /
