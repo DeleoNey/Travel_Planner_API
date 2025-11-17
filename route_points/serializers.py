@@ -10,9 +10,8 @@ class TripPointSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         trip = self.context['trip']
-        visit_date = attrs.get('visit_date')
+        visit_date = attrs.get('date')
 
-        # ---- Validate date ----
         if visit_date:
             if visit_date < trip.start_date or visit_date > trip.end_date:
                 raise serializers.ValidationError(
