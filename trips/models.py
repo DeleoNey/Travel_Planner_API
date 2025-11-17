@@ -3,9 +3,9 @@ from travel_planner_api import settings
 
 
 class Trip(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='trips', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='trips', on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     start_date = models.DateField()
     end_date = models.DateField()
     base_currency = models.CharField(max_length=3, default='USD')
@@ -14,3 +14,13 @@ class Trip(models.Model):
 
     def __str__(self):
         return self.title
+
+    # POST / api / trips / {id} / points /
+    #
+    # GET / api / trips / {id} / points /
+    #
+    # GET / api / trip - points / {id} /
+    #
+    # PATCH / api / trip - points / {id} /
+    #
+    # DELETE / api / trip - points / {id} /
