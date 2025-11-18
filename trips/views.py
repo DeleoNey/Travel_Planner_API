@@ -11,6 +11,13 @@ class TripsViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all()
 
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            return Trip.objects.none()
+
+        if not self.request.user.is_authenticated:
+            return Trip.objects.none()
+
         return Trip.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):

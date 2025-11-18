@@ -3,7 +3,6 @@ from travel_planner_api.settings import WEATHER_API_KEY
 
 
 class WeatherService:
-    # 1. Змінюємо BASE_URL
     BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
     def get_weather(self, lat: str, lon: str, api_key=WEATHER_API_KEY) -> dict:
@@ -26,13 +25,13 @@ class WeatherService:
             sys_data = data.get('sys', {})
 
             weather_data = {
-                "condition": weather_desc.get('main'),
-                "description": weather_desc.get('description'),
-                "temp_celsius": main_data.get('temp'),
-                "feels_like_celsius": main_data.get('feels_like'),
-                "wind_speed_mps": wind_data.get('speed'),
-                "country_code": sys_data.get('country'),
-                "city_name": data.get('name'),
+                "погода": weather_desc.get('main'),
+                "опис": weather_desc.get('description'),
+                "температура °C": main_data.get('temp'),
+                "відчувається як": main_data.get('feels_like'),
+                "швидкість вітру(м/c)": wind_data.get('speed'),
+                "код країни": sys_data.get('country'),
+                "місто": data.get('name'),
             }
 
             return weather_data
