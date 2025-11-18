@@ -13,6 +13,10 @@ trip_points_detail = TripPointViewSet.as_view({
     "delete": "destroy",
 })
 
+trip_points_places_nearby = TripPointViewSet.as_view({
+    "get": "places_nearby",
+})
+
 weather_detail = WeatherViewSet.as_view({
     "get": "retrieve",
 })
@@ -23,13 +27,22 @@ urlpatterns = [
         trip_points_list,
         name="trip-points-list"
     ),
+
     path(
         "<int:trip_id>/points/<int:pk>/",
         trip_points_detail,
         name="trip-point-detail"
     ),
-    path("<int:trip_id>/points/<int:pk>/weather/", weather_detail, name="trip-point-weather"),
+
+    path(
+        "<int:trip_id>/points/<int:pk>/places-nearby/",
+        trip_points_places_nearby,
+        name="trip-point-places-nearby"
+    ),
+
+    path(
+        "<int:trip_id>/points/<int:pk>/weather/",
+        weather_detail,
+        name="trip-point-weather"
+    ),
 ]
-
-
-# <int:trip_id>/trips/weather
