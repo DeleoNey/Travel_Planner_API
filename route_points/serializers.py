@@ -1,12 +1,38 @@
 from rest_framework import serializers
+
+from integrations.services.currency import CurrencyService
 from .models import TripPoint
 
 
 class TripPointSerializer(serializers.ModelSerializer):
+    local_budget = serializers.SerializerMethodField()
+
     class Meta:
         model = TripPoint
-        fields = '__all__'
-        read_only_fields = ['trip']
+        fields = [
+            'id',
+            'city',
+            'country',
+            'date',
+            'planned_budget',
+            'local_budget',
+            'latitude',
+            'longitude',
+            'created_at',
+            'trip',
+        ]
+        read_only_fields = ['trip', 'local_budget']
+
+    def get_local_budget(self, obj):
+        try:
+            service = CurrencyService(base_currency="USD")
+            converted = service.convert_budget_for_country(
+                amount=float(obj.planned_budget),
+                country=obj.country
+            )
+            return converted['converted_amount']
+        except Exception:
+            return None
 
     def validate(self, attrs):
         trip = self.context['trip']

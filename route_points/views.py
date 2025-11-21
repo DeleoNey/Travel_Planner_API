@@ -4,19 +4,21 @@ from rest_framework.exceptions import NotFound
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.response import Response
 
+from travel_planner_api import settings
 from core.permissions import IsOwnerPermission
+
 from integrations.services.places import PlacesService
+from integrations.services.currency import CurrencyService
+from integrations.services.weather import WeatherService
 
 from .serializers import TripPointSerializer
 from route_points.models import TripPoint
 from trips.models import Trip
-from integrations.services.weather import WeatherService
-from travel_planner_api import settings
 
 
 class TripPointViewSet(viewsets.ModelViewSet):
     serializer_class = TripPointSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerPermission]
+    # permission_classes = [permissions.IsAuthenticated, IsOwnerPermission]
 
     def get_trip(self):
         trip_id = self.kwargs.get("trip_id")
@@ -47,10 +49,10 @@ class TripPointViewSet(viewsets.ModelViewSet):
     def places_nearby(self, request, trip_id=None, pk=None):
         point = self.get_object()  # TripPoint instance
 
-        # ініціалізуємо сервіс
+        # init service
         places_service = PlacesService(settings.PLACES_API_KEY)
 
-        # викликаємо API
+        # call API
         data = places_service.get_nearby_places(
             lat=point.latitude,
             lon=point.longitude,
