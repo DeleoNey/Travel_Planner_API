@@ -1,6 +1,6 @@
-from rest_framework import viewsets, permissions, response
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.response import Response
 
@@ -8,7 +8,6 @@ from travel_planner_api import settings
 from core.permissions import IsOwnerPermission
 
 from integrations.services.places import PlacesService
-from integrations.services.currency import CurrencyService
 from integrations.services.weather import WeatherService
 
 from .serializers import TripPointSerializer
@@ -18,7 +17,7 @@ from trips.models import Trip
 
 class TripPointViewSet(viewsets.ModelViewSet):
     serializer_class = TripPointSerializer
-    # permission_classes = [permissions.IsAuthenticated, IsOwnerPermission]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerPermission]
 
     def get_trip(self):
         trip_id = self.kwargs.get("trip_id")
@@ -36,6 +35,10 @@ class TripPointViewSet(viewsets.ModelViewSet):
         trip = self.get_trip()
         if trip is None:
             return TripPoint.objects.none()
+
+        if trip.user != self.request.user:
+            raise PermissionDenied("You do not have access to this trip's points.")
+
         return trip.points.all()
 
     def get_serializer_context(self):
