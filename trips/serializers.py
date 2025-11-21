@@ -14,3 +14,13 @@ class TripSerializer(serializers.ModelSerializer):
             'base_currency',
             'created_at',
         )
+
+
+    def validate(self, attrs):
+        start = attrs.get('start_date')
+        end = attrs.get('end_date')
+        if start and end and end < start:
+            raise serializers.ValidationError({
+                'end_date': "End date cannot be earlier than start date."
+            })
+        return attrs
